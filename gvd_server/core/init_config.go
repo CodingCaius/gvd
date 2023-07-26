@@ -1,3 +1,5 @@
+//core文件夹用于初始化连接
+
 package core
 
 import (
