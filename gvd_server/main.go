@@ -7,7 +7,12 @@ import (
 )
 
 func main() {
+	global.Log = core.InitLogger()
 	global.Config = core.InitConfig()
+
+	global.Log.Infof("test1")
+	global.Log.Warnf("test2")
+	global.Log.Errorf("test3")
 
 
 	router := routers.Routers()
