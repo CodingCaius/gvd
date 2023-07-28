@@ -2,3 +2,11 @@ system:
   ip: ""
   port: 8000
   env: "dev"
+mysql:
+  host: 127.0.0.1
+  port: 3306
+  config: charset=utf8mb4&parseTime=True&loc=Local
+  db: gvd_db
+  username: root
+  password: Qq3085481534
+  logLevel: info
