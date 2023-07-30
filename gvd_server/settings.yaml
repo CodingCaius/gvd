@@ -9,7 +9,7 @@ mysql:
   db: gvd_db
   username: root
   password: Qq3085481534
-  logLevel: info
+  logLevel: error
 redis:
   ip: 127.0.0.1
   port: 6379
