@@ -1,3 +1,5 @@
+//初始化redis
+
 package core
 
 import (

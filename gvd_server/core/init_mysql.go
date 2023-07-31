@@ -1,3 +1,5 @@
+//初始化mysql
+
 package core
 
 import (

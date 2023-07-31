@@ -8,8 +8,8 @@ import (
 )
 
 func main() {
-	global.Log = core.InitLogger()
 	global.Config = core.InitConfig()
+	global.Log = core.InitLogger()
 	global.DB = core.InitMysql()
 	global.Redis = core.InitRedis(0)
 

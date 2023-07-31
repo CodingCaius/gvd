@@ -1,3 +1,4 @@
+//初始化日志
 package core
 
 import (
