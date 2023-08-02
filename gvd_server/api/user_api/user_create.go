@@ -1,6 +1,10 @@
 package user_api
 
-import "github.com/gin-gonic/gin"
+import (
+	"gvd_server/service/common/res"
+
+	"github.com/gin-gonic/gin"
+)
 
 type UserCreateRequest struct {
 	UserName string `json:"userName" binding:"required"`
@@ -16,8 +20,8 @@ func (UserApi) UserCreateView(c *gin.Context) {
 	//将接收到的 JSON 数据解析到 cr 中
 	err := c.ShouldBindJSON(&cr)
 	if err != nil {
-		c.JSON(200, gin.H{"msg": "失败"})
+		res.FailWithMsg("参数校验错误", c)
 		return
 	}
-	c.JSON(200, gin.H{"msg": "成功"})
+	res.OKWithMsg("创建成功", c)
 }
