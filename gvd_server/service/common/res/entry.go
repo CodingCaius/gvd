@@ -1,13 +1,16 @@
 package res
 
 import (
+	"gvd_server/utils/valid"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 )
 
+type Code int
+
 type Response struct {
-	Code int    `json:"code"`
+	Code Code    `json:"code"`
 	Data any    `json:"data"`
 	Msg  string `json:"msg"`
 }
@@ -17,9 +20,11 @@ type ListResponse[T any] struct {
 	Count int `json:"count"`
 }
 
+
 const (
-	SUCCESS = 0
-	Failed  = 7
+	SUCCESS   Code = 0
+	ErrorCode Code = 7 //系统错误
+	ValidCode Code = 9 //校验错误
 )
 
 func OK(data any, msg string, c *gin.Context) {
@@ -44,18 +49,25 @@ func OKWithList[T any](list []T, count int, c *gin.Context) {
 	}, "成功", c)
 }
 
-func Fail(code int, data any, msg string, c *gin.Context) {
+func Fail(code Code, data any, msg string, c *gin.Context) {
 	c.JSON(http.StatusOK, Response{Code: code, Data: data, Msg: msg})
 }
 
 func FailWithMsg(msg string, c *gin.Context) {
-	Fail(Failed, map[string]any{}, msg, c)
+	Fail(ErrorCode, map[string]any{}, msg, c)
+}
+
+func FailWithVaildMsg(msg string, c *gin.Context) {
+	Fail(ValidCode, map[string]any{}, msg, c)
 }
 
 func FailWithData(data any, c *gin.Context) {
-	Fail(Failed, data, "系统错误", c)
+	Fail(ErrorCode, data, "系统错误", c)
 }
 
 func FailWithError(err error, obj any, c *gin.Context) {
-
+	errMsg := valid.Error(err)
+	FailWithMsg(errMsg, c)
 }
+
+
