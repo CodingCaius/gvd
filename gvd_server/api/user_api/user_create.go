@@ -1,6 +1,7 @@
 package user_api
 
 import (
+	"fmt"
 	"gvd_server/global"
 	"gvd_server/models"
 	"gvd_server/service/common/res"
@@ -32,6 +33,13 @@ func (UserApi) UserCreateView(c *gin.Context) {
 	if err == nil {
 		res.FailWithMsg("用户名已存在", c)
 		return
+	}
+
+	if cr.NickName == "" {
+		//昵称如果没有，就自己拼接一个
+		var maxID uint
+		global.DB.Model(models.UserModel{}).Select("max(id)").Scan(&maxID)
+		cr.NickName = fmt.Sprintf("用户_%d", maxID + 1)
 	}
 	err = global.DB.Create(&models.UserModel{
 		UserName: cr.UserName,
