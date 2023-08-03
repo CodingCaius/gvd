@@ -4,6 +4,7 @@ import (
 	"gvd_server/global"
 	"gvd_server/models"
 	"gvd_server/service/common/res"
+	"gvd_server/utils/pwd"
 
 	"github.com/gin-gonic/gin"
 )
@@ -34,7 +35,7 @@ func (UserApi) UserCreateView(c *gin.Context) {
 	}
 	err = global.DB.Create(&models.UserModel{
 		UserName: cr.UserName,
-		Password: cr.Password,
+		Password: pwd.HashPwd(cr.Password),
 		NickName: cr.NickName,
 		IP: c.RemoteIP(),
 		RoleID: cr.RoleID,
