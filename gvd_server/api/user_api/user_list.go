@@ -1,9 +1,8 @@
 package user_api
 
 import (
-	"fmt"
-	"gvd_server/global"
 	"gvd_server/models"
+	"gvd_server/service/common/list"
 	"gvd_server/service/common/res"
 
 	"github.com/gin-gonic/gin"
@@ -12,14 +11,22 @@ import (
 type UserListRequest struct {
 	Page  int    `json:"page" form:"page"`
 	Limit int    `json:"limit" form:"limit"`
-	Key   string `json:"key" form:"key"`
+	Key   string `json:"key" form:"key"` //模糊匹配的关键字
 }
 
 func (UserApi) UserListView(c *gin.Context) {
-	var cr UserListRequest
+	var cr models.Pagination
 	c.ShouldBindQuery(&cr)
 
-	var count int
+	_list, count, _ := list.QueryList(models.UserModel{}, list.Option{
+		Pagination: cr,
+		Likes:      []string{"nickName", "userName"},
+		Preload:    []string{"RoleModel"},
+	})
+
+	res.OKWithList(_list, count, c)
+
+	/* var count int
 
 	if cr.Limit < 0 {
 		cr.Limit = 10
@@ -36,5 +43,5 @@ func (UserApi) UserListView(c *gin.Context) {
 	global.DB.Model(models.UserModel{}).Where(query).Select("count(id)").Scan(&count)
 	global.DB.Limit(cr.Limit).Offset(offset).Find(&users)
 
-	res.OKWithList(users, count, c)
+	res.OKWithList(users, count, c) */
 }

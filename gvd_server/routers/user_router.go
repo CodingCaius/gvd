@@ -9,9 +9,9 @@ import (
 
 func (router RouterGroup) UserRouter() {
 	app := api.App.UserApi
-	router.POST("login", app.UserLoginView) //用户登录
+	router.POST("login", app.UserLoginView)                         //用户登录
 	router.POST("users", middleware.JwtAdmin(), app.UserCreateView) //创建用户
-	router.PUT("users", middleware.JwtAdmin(), app.UserUpdateView) //用户更新
-	router.GET("users", middleware.JwtAdmin(), app.UserListView) //用户列表
+	router.PUT("users", middleware.JwtAdmin(), app.UserUpdateView)  //用户更新
+	router.GET("users", middleware.JwtAdmin(), app.UserListView)    //用户列表
 
 }
