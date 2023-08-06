@@ -39,6 +39,7 @@ func QueryList[T any](model T, option Option) (list []T, count int, err error) {
 	//    ? 链式方法
 
 	if option.Key != "" {
+		//创建一个基础查询对象
 		likeQuery := global.DB.Where("")
 		//根据传入的查询选项 option，构建一个包含多个模糊搜索条件的查询，并将这些条件添加到原始的查询对象 query 中
 		for index, column := range option.Likes {
