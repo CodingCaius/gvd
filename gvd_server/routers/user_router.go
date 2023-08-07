@@ -16,5 +16,8 @@ func (router RouterGroup) UserRouter() {
 	router.DELETE("users", middleware.JwtAdmin(), app.UserRemoveView)    //用户删除
 	router.GET("logout", middleware.JwtAuth(), app.UserLogoutView)    //用户注销
 	router.GET("users_info", middleware.JwtAuth(), app.UserInfoView)    //用户注销
+	//用户修改密码
+	router.PUT("user_password", middleware.JwtAuth(), app.UserUpdatePasswordView)
+
 
 }

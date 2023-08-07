@@ -1,6 +1,11 @@
 package jwts
 
-import "github.com/dgrijalva/jwt-go/v4"
+import (
+	"gvd_server/global"
+	"gvd_server/models"
+
+	"github.com/dgrijalva/jwt-go/v4"
+)
 
 // 载荷
 type JwtPayLoad struct {
@@ -17,4 +22,10 @@ var Secret []byte
 type CustomClaims struct {
 	JwtPayLoad
 	jwt.StandardClaims //标准声明
+}
+
+func (c CustomClaims) GetUser() (user *models.UserModel, err error) {
+	user = new(models.UserModel)
+	err = global.DB.Take(user, c.UserID).Error
+	return
 }
