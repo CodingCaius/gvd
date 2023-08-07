@@ -6,6 +6,7 @@ import (
 	"gvd_server/service/common/res"
 	"gvd_server/utils/jwts"
 	"gvd_server/utils/pwd"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -49,5 +50,8 @@ func (UserApi) UserLoginView(c *gin.Context) {
 		res.FailWithMsg("生成Token失败", c)
 		return
 	}
+
+	global.DB.Model(&user).Update("lastLogin", time.Now())
+
 	res.OKWithData(token, c)
 }

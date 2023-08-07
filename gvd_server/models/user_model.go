@@ -1,6 +1,6 @@
 package models //表结构
 
-/*
+import "time" /*
 JSON 标签的作用是指定在将结构体实例转换为 JSON 字符串（序列化）时，使用指定的字段名称来表示结构体字段。同样，在从 JSON 字符串中解析数据（反序列化）时，也会根据 JSON 标签来找到对应的字段并赋值
 */
 
@@ -17,5 +17,6 @@ type UserModel struct {
 	RoleID   uint   `gorm:"column:roleID;comment:用户对应的角色" json:"roleID"` //用户对应的角色
 	//指明两个表的外键关系
 	//GORM 将会在查询 UserModel 表时自动进行联接（JOIN），并根据 RoleID 字段的值来获取关联的角色信息
-	RoleModel RoleModel `gorm:"foreignKey:RoleID" json:"-"`
+	LastLogin time.Time `gorm:"column:lastLogin" json:"lastLogin"` //用户最后登录时间
+	RoleModel RoleModel `gorm:"foreignKey:RoleID" json:"-"` //用户角色信息
 }
