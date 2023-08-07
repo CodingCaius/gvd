@@ -13,5 +13,7 @@ func (router RouterGroup) UserRouter() {
 	router.POST("users", middleware.JwtAdmin(), app.UserCreateView) //创建用户
 	router.PUT("users", middleware.JwtAdmin(), app.UserUpdateView)  //用户更新
 	router.GET("users", middleware.JwtAdmin(), app.UserListView)    //用户列表
+	router.DELETE("users", middleware.JwtAdmin(), app.UserRemoveView)    //用户删除
+	router.GET("logout", middleware.JwtAuth(), app.UserLogoutView)    //用户注销
 
 }
