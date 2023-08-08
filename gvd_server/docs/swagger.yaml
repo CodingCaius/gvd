@@ -1,0 +1,358 @@
+basePath: /
+definitions:
+  models.UserModel:
+    properties:
+      addr:
+        description: 地址
+        type: string
+      avatar:
+        type: string
+      createdAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      ip:
+        type: string
+      lastLogin:
+        description: |-
+          指明两个表的外键关系
+          GORM 将会在查询 UserModel 表时自动进行联接（JOIN），并根据 RoleID 字段的值来获取关联的角色信息
+        type: string
+      nickName:
+        type: string
+      roleID:
+        description: 用户对应的角色
+        type: integer
+      updatedAt:
+        type: string
+    type: object
+  res.Code:
+    enum:
+    - 0
+    - 7
+    - 9
+    type: integer
+    x-enum-comments:
+      ErrorCode: 系统错误
+      ValidCode: 校验错误
+    x-enum-varnames:
+    - SUCCESS
+    - ErrorCode
+    - ValidCode
+  res.ListResponse-models_UserModel:
+    properties:
+      count:
+        type: integer
+      list:
+        items:
+          $ref: '#/definitions/models.UserModel'
+        type: array
+    type: object
+  res.Response:
+    properties:
+      code:
+        $ref: '#/definitions/res.Code'
+      data: {}
+      msg:
+        type: string
+    type: object
+  user_api.UserCreateRequest:
+    properties:
+      nickName:
+        type: string
+      password:
+        type: string
+      roleID:
+        description: 角色ID
+        type: integer
+      userName:
+        description: bingding字段 定义字段在数据绑定（比如 HTTP 请求参数绑定）时的行为
+        type: string
+    required:
+    - password
+    - roleID
+    - userName
+    type: object
+  user_api.UserInfoResponse:
+    properties:
+      addr:
+        description: 地址
+        type: string
+      avatar:
+        type: string
+      createdAt:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      ip:
+        type: string
+      lastLogin:
+        description: |-
+          指明两个表的外键关系
+          GORM 将会在查询 UserModel 表时自动进行联接（JOIN），并根据 RoleID 字段的值来获取关联的角色信息
+        type: string
+      nickName:
+        type: string
+      role:
+        type: string
+      roleID:
+        description: 用户对应的角色
+        type: integer
+      updatedAt:
+        type: string
+      userName:
+        type: string
+    type: object
+  user_api.UserLoginRequest:
+    properties:
+      password:
+        type: string
+      userName:
+        type: string
+    required:
+    - password
+    - userName
+    type: object
+  user_api.UserUpdateInfoRequest:
+    properties:
+      avatar:
+        type: string
+      nickName:
+        type: string
+    type: object
+  user_api.UserUpdatePasswordRequest:
+    properties:
+      oldPwd:
+        type: string
+      password:
+        type: string
+    required:
+    - oldPwd
+    - password
+    type: object
+  user_api.UserUpdateRequest:
+    properties:
+      id:
+        type: integer
+      nickName:
+        type: string
+      password:
+        description: bingding字段 定义字段在数据绑定（比如 HTTP 请求参数绑定）时的行为
+        type: string
+      roleID:
+        description: 角色ID
+        type: integer
+    required:
+    - id
+    - password
+    - roleID
+    type: object
+host: 101.43.78.114:8000
+info:
+  contact: {}
+  description: API文档
+  title: 文档项目api文档
+  version: "1.0"
+paths:
+  /ap1/users_info:
+    get:
+      description: 用户信息
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/user_api.UserInfoResponse'
+              type: object
+      summary: 用户信息
+      tags:
+      - 用户管理
+  /api/login:
+    post:
+      description: 用户登录
+      parameters:
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/user_api.UserLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 用户登录
+      tags:
+      - 用户管理
+  /api/users:
+    delete:
+      description: 删除用户
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 删除用户
+      tags:
+      - 用户管理
+    get:
+      description: 用户列表
+      parameters:
+      - description: 模糊匹配的关键字
+        in: query
+        name: key
+        type: string
+      - in: query
+        name: limit
+        type: integer
+      - in: query
+        name: page
+        type: integer
+      - in: query
+        name: sort
+        type: string
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/res.ListResponse-models_UserModel'
+              type: object
+      summary: 用户列表
+      tags:
+      - 用户管理
+    post:
+      description: 创建用户，只能管理员创建
+      parameters:
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/user_api.UserCreateRequest'
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 创建用户
+      tags:
+      - 用户管理
+    put:
+      description: 管理员更新用户信息
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/user_api.UserUpdateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 管理员更新用户信息
+      tags:
+      - 用户管理
+  /api/users_info:
+    put:
+      description: 用户更新自己的信息
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/user_api.UserUpdateInfoRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 用户更新自己的信息
+      tags:
+      - 用户管理
+  /api/users_password:
+    put:
+      description: 用户修改密码
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/user_api.UserUpdatePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 用户修改密码
+      tags:
+      - 用户管理
+swagger: "2.0"

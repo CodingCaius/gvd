@@ -18,7 +18,15 @@ type UserUpdateRequest struct {
 
 }
 
-// 用户更新
+// UserListView 管理员更新用户信息
+// @Tags 用户管理
+// @Summary 管理员更新用户信息
+// @Description 管理员更新用户信息
+// @Param token header string true "token"
+// @Param data body UserUpdateRequest true "参数"
+// @Router /api/users [put]
+// @Produce json
+// @Success 200 {object} res.Response{}
 func (UserApi) UserUpdateView(c *gin.Context) {
 	var uur UserUpdateRequest
 	err := c.ShouldBindJSON(&uur)

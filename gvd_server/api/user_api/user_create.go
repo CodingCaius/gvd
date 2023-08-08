@@ -19,7 +19,15 @@ type UserCreateRequest struct {
 
 }
 
-// 处理 创建用户 的 API 请求
+// UserCreateView 处理 创建用户 的 API 请求
+// @Tags 用户管理
+// @Summary 创建用户
+// @Description 创建用户，只能管理员创建
+// @Param data body UserCreateRequest true "参数"
+// @Param token header string true "token"
+// @Router /api/users [post]
+// @Produce json
+// @Success 200 {object} res.Response{}
 func (UserApi) UserCreateView(c *gin.Context) {
 	var cr UserCreateRequest
 	//将接收到的 JSON 数据解析到 cr 中

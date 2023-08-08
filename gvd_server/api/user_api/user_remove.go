@@ -10,6 +10,15 @@ import (
   "gvd_server/service/common/res"
 )
 
+
+// UserListView 删除用户
+// @Tags 用户管理
+// @Summary 删除用户
+// @Description 删除用户
+// @Param token header string true "token"
+// @Router /api/users [delete]
+// @Produce json
+// @Success 200 {object} res.Response{}
 func (UserApi) UserRemoveView(c *gin.Context) {
   var cr models.IDListRequest
   err := c.ShouldBindJSON(&cr)
