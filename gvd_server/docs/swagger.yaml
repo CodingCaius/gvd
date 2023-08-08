@@ -182,6 +182,32 @@ paths:
       summary: 用户信息
       tags:
       - 用户管理
+  /api/image:
+    post:
+      consumes:
+      - multipart/formdata
+      description: 上传图片
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: 文件上传
+        in: formData
+        name: image
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 上传图片
+      tags:
+      - 图片管理
   /api/login:
     post:
       description: 用户登录

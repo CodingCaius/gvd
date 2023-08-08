@@ -21,5 +21,6 @@ func Routers() *gin.Engine {
 	routerGroup := RouterGroup{apiGroup}
 	//定义具体的路由
 	routerGroup.UserRouter()
+	routerGroup.ImageRouter()
 	return router
 }
