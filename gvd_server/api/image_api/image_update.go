@@ -46,7 +46,12 @@ func (ImageApi) ImageUploadView(c *gin.Context) {
 		return
 	}
 
-	//文件大小判断
+
+	// 文件大小判断  2MB
+	if file.Size > int64(2*1024*1024) {  //Size的单位是字节
+  		res.FailWithMsg("文件过大", c)
+  		return
+	}
 
 	//重复文件判断
 
@@ -76,3 +81,6 @@ func InImageWhiteList(fileName string, whiteList []string) bool {
 	}
 	return false
 }
+
+
+
