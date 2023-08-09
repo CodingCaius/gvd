@@ -15,6 +15,6 @@ type ImageModel struct {
 
 // /update/xx.png
 //相对于项目的 Web 根路径
-func (image ImageModel) WebPAth() string {
+func (image ImageModel) WebPath() string {
 	return fmt.Sprintf("/%s", image.Path)
 }
