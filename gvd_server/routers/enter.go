@@ -19,6 +19,11 @@ func Routers() *gin.Engine {
 	//创建api路由组
 	apiGroup := router.Group("api")
 	routerGroup := RouterGroup{apiGroup}
+
+	//线上如果有nginx,可以做反向代理，这一步可以省略
+	//第一个参数是web的访问别名  第二个参数是内部的映射目录
+	router.Static("/uploads", "uploads")
+
 	//定义具体的路由
 	routerGroup.UserRouter()
 	routerGroup.ImageRouter()

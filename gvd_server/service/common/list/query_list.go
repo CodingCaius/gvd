@@ -16,7 +16,7 @@ type Option struct {
 	Preload []string //需要预加载的关联模型
 }
 
-// 执行查询操作，接受两个参数，一个是模型对象 model，另一个是查询选项 option
+// 执行查询操作，接受两个参数，一个是模型对象 model，另一个是查询选项 option，返回满足条件的数据列表
 func QueryList[T any](model T, option Option) (list []T, count int, err error) {
 	//这里的 Where 方法并没有实际执行查询操作，它只是构建了查询的条件部分。实际的查询操作通常在后续的代码中完成，例如调用 .Find() 或 .First() 等方法。
 	query := global.DB.Where(model) //可以基于这个查询对象继续链式调用其他查询方法
@@ -24,6 +24,7 @@ func QueryList[T any](model T, option Option) (list []T, count int, err error) {
 		query = query.Debug()
 	}
 
+	//默认是按照创建 时间 降序
 	if option.Sort == "" {
 		option.Sort = "createdAt desc"
 	}
