@@ -50,6 +50,7 @@ func (UserApi) UserLoginView(c *gin.Context) {
 	}
 
 	token, err := jwts.GenToken(jwts.JwtPayLoad{
+		UserName: user.UserName,
 		NickName: user.NickName,
 		RoleID:   user.RoleID,
 		UserID:   user.ID,

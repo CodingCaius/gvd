@@ -12,6 +12,8 @@ type JwtPayLoad struct {
 	NickName string `json:"nickName"`
 	RoleID   uint   `json:"roleID"`
 	UserID   uint   `json:"userID"`
+	UserName string `json:"userName"`
+
 }
 
 // 密钥

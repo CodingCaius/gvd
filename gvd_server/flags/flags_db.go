@@ -3,6 +3,7 @@ package flags
 import (
 	"gvd_server/global"
 	"gvd_server/models"
+	"gvd_server/plugins/log_stash"
 
 	"github.com/sirupsen/logrus"
 )
@@ -19,6 +20,8 @@ func DB() {
 			&models.ImageModel{},
 			&models.UserPwdDocModel{},
 			&models.LoginModel{},
+			&models.DocDataModel{},
+			&log_stash.LogModel{},
 		)
 
 	if err != nil {
