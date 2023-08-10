@@ -12,7 +12,8 @@ func ParseToken(token string) (*CustomClaims, error) {
 		return []byte(global.Config.Jwt.Secret), nil
 	})
 
-	//检查tokenClaims是否成果被解析
+	//检查tokenClaims是否成功被解析
+	//如果token不为空，那么可以解析出结果
 	if tokenClaims != nil {
 		//检查tokenClaims是否包含有效的声明，并将声明强制转换为*Claims类型的结构体指针claims
 		if claims, ok := tokenClaims.Claims.(*CustomClaims); ok && tokenClaims.Valid {
@@ -20,6 +21,7 @@ func ParseToken(token string) (*CustomClaims, error) {
 		}
 	}
 
+	//如果token为空，直接返回nil
 	return nil, err
 }
 

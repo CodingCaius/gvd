@@ -3,6 +3,7 @@ package user_api
 import (
 	"gvd_server/global"
 	"gvd_server/models"
+	"gvd_server/plugins/log_stash"
 	"gvd_server/service/common/res"
 	"gvd_server/utils/jwts"
 	"gvd_server/utils/pwd"
@@ -15,7 +16,6 @@ type UserLoginRequest struct {
 	UserName string `json:"userName" binding:"required" label:"用户名"`
 	Password string `json:"password" binding:"required" label:"密码"`
 }
-
 
 // UserListView 用户登录
 // @Tags 用户管理
@@ -40,11 +40,13 @@ func (UserApi) UserLoginView(c *gin.Context) {
 	err = global.DB.Take(&user, "userName = ?", ulr.UserName).Error
 	if err != nil {
 		global.Log.Warn("用户名不存在", ulr.UserName)
+		log_stash.NewFailLogin("用户名不存在", ulr.UserName, ulr.Password, c)
 		res.FailWithMsg("用户名或密码错误", c)
 		return
 	}
 	if !pwd.CheckPwd(user.Password, ulr.Password) {
 		global.Log.Warn("用户密码错误", ulr.UserName, ulr.Password)
+		log_stash.NewFailLogin("用户密码错误", ulr.UserName, ulr.Password, c)
 		res.FailWithMsg("用户名或密码错误", c)
 		return
 	}
@@ -60,6 +62,9 @@ func (UserApi) UserLoginView(c *gin.Context) {
 		res.FailWithMsg("生成Token失败", c)
 		return
 	}
+
+	c.Request.Header.Set("token", token)
+	log_stash.NewSuccessLogin(c)
 
 	global.DB.Model(&user).Update("lastLogin", time.Now())
 
