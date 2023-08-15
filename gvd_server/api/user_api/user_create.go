@@ -2,6 +2,7 @@ package user_api
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"gvd_server/global"
 	"gvd_server/models"
@@ -14,15 +15,13 @@ import (
 )
 
 type UserCreateRequest struct {
-	//bingding字段 定义字段在数据绑定（比如 HTTP 请求参数绑定）时的行为
-	UserName string `json:"userName" binding:"required" label:"用户名"`
-	Password string `json:"password" binding:"required"`
-	NickName string `json:"nickName"`
-	RoleID   uint   `json:"roleID" binding:"required"` //角色ID
-
+	UserName string `json:"userName" binding:"required" label:"用户名"` // 用户名
+	Password string `json:"password" binding:"required"`             // 密码
+	NickName string `json:"nickName"`                                // 昵称
+	RoleID   uint   `json:"roleID" binding:"required"`               // 角色id
 }
 
-// UserCreateView 处理 创建用户 的 API 请求
+// UserCreateView 创建用户
 // @Tags 用户管理
 // @Summary 创建用户
 // @Description 创建用户，只能管理员创建
@@ -33,57 +32,71 @@ type UserCreateRequest struct {
 // @Success 200 {object} res.Response{}
 func (UserApi) UserCreateView(c *gin.Context) {
 	var cr UserCreateRequest
-	//将接收到的 JSON 数据解析到 cr 中
 	err := c.ShouldBindJSON(&cr)
 	if err != nil {
-		res.FailWithError(err, &cr, c)
+		//res.FailWithValidError(err, &cr, c)
 		return
 	}
-
-	//创建日志对象
 	log := log_stash.NewAction(c)
 
-	// 将cr转换为json格式
 	byteData, _ := json.Marshal(cr)
-
-	// 将cr转换为字符串，并设置到log中
 	log.SetItem("创建参数", string(byteData))
 
-
-
-	var user models.UserModel
-	err = global.DB.Take(&user, "userName = ?", cr.UserName).Error
-	if err == nil {
-		log.SetItem("userName", cr.UserName)
-		log.Warn("创建用户错误，用户名已存在")
-		res.FailWithMsg("用户名已存在", c)
-		return
-
-	}
-
-	if cr.NickName == "" {
-		//昵称如果没有，就自己拼接一个
-		var maxID uint
-		global.DB.Model(models.UserModel{}).Select("max(id)").Scan(&maxID)
-		cr.NickName = fmt.Sprintf("用户_%d", maxID+1)
-		log.SetItem("自动生成昵称", cr.NickName)
-	}
-	err = global.DB.Create(&models.UserModel{
+	err = createUser(models.UserModel{
 		UserName:  cr.UserName,
-		Password:  pwd.HashPwd(cr.Password),
+		Password:  cr.Password,
 		NickName:  cr.NickName,
 		IP:        c.RemoteIP(),
 		RoleID:    cr.RoleID,
 		LastLogin: time.Now(),
-	}).Error
+	}, &log)
 	if err != nil {
-		global.Log.Error(err)
-		res.FailWithMsg("用户创建失败", c)
-		log.SetItem("错误原因", err.Error())
-		log.Error("用户创建失败")
+		res.FailWithMsg(err.Error(), c)
 		return
 	}
-
-	log.Info("用户创建成功")
+	log.SetItem("我的地盘", "我做主")
+	log.Warn("用户创建成功")
 	res.OKWithMsg("用户创建成功", c)
+}
+
+
+//将log作为参数传入，可以做到操作日志的更新
+//根据是否是同一个log，来决定是否更新操作日志
+func createUser(user models.UserModel, log *log_stash.Action) (err error) {
+	err = global.DB.Take(&user, "userName = ?", user.UserName).Error
+	if err == nil {
+		log.SetItem("userName", user.UserName)
+		log.Warn("创建用户错误，用户名已存在")
+		return errors.New("用户名已存在")
+	}
+
+	log.SetItem("是否创建昵称", user.NickName == "")
+	if user.NickName == "" {
+		// 昵称如果不存在，那么就要
+		var maxID uint
+		global.DB.Model(models.UserModel{}).Select("max(id)").Scan(&maxID)
+		user.NickName = fmt.Sprintf("用户_%d", maxID+1)
+		log.SetItem("自动生成昵称", user.NickName)
+
+	}
+	var role models.RoleModel
+	err = global.DB.Take(&role, user.RoleID).Error
+	if err != nil {
+		log.SetItem("角色id", user.RoleID)
+		log.Warn("创建用户错误，角色不存在")
+		return errors.New("角色不存在")
+	}
+
+	//密码处理
+	user.Password = pwd.HashPwd(user.Password)
+
+	err = global.DB.Create(&user).Error
+	if err != nil {
+		global.Log.Error(err)
+		log.SetItem("错误原因", err.Error())
+		log.Error("用户创建失败")
+		return errors.New("用户创建失败")
+	}
+	log.Info("用户创建成功123")
+	return nil
 }
