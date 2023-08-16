@@ -2,6 +2,7 @@ package api
 
 import (
 	"gvd_server/api/image_api"
+	"gvd_server/api/site_api"
 	"gvd_server/api/user_api"
 )
 
@@ -13,6 +14,8 @@ import (
 type Api struct {
 	UserApi  user_api.UserApi
 	ImageApi image_api.ImageApi
+	//LogApi   log_api.LogApi
+	SiteApi site_api.SiteApi
 }
 
 var App = new(Api)

@@ -216,6 +216,38 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/site": {
+            "get": {
+                "description": "站点配置查询",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "站点配置"
+                ],
+                "summary": "站点配置查询",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/res.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/config.Site"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/users": {
             "get": {
                 "description": "用户列表",
@@ -455,6 +487,39 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "config.Site": {
+            "type": "object",
+            "properties": {
+                "abstract": {
+                    "description": "网站简介",
+                    "type": "string"
+                },
+                "content": {
+                    "description": "内容",
+                    "type": "string"
+                },
+                "footer": {
+                    "description": "尾部信息",
+                    "type": "string"
+                },
+                "href": {
+                    "description": "点击go的跳转链接",
+                    "type": "string"
+                },
+                "icon": {
+                    "description": "首页的图标",
+                    "type": "string"
+                },
+                "iconHref": {
+                    "description": "图标链接",
+                    "type": "string"
+                },
+                "title": {
+                    "description": "网站名称",
+                    "type": "string"
+                }
+            }
+        },
         "image_api.ImageListResponse": {
             "type": "object",
             "properties": {
@@ -595,17 +660,19 @@ const docTemplate = `{
             ],
             "properties": {
                 "nickName": {
+                    "description": "昵称",
                     "type": "string"
                 },
                 "password": {
+                    "description": "密码",
                     "type": "string"
                 },
                 "roleID": {
-                    "description": "角色ID",
+                    "description": "角色id",
                     "type": "integer"
                 },
                 "userName": {
-                    "description": "bingding字段 定义字段在数据绑定（比如 HTTP 请求参数绑定）时的行为",
+                    "description": "用户名",
                     "type": "string"
                 }
             }

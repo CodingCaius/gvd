@@ -1,5 +1,29 @@
 basePath: /
 definitions:
+  config.Site:
+    properties:
+      abstract:
+        description: 网站简介
+        type: string
+      content:
+        description: 内容
+        type: string
+      footer:
+        description: 尾部信息
+        type: string
+      href:
+        description: 点击go的跳转链接
+        type: string
+      icon:
+        description: 首页的图标
+        type: string
+      iconHref:
+        description: 图标链接
+        type: string
+      title:
+        description: 网站名称
+        type: string
+    type: object
   image_api.ImageListResponse:
     properties:
       createdAt:
@@ -94,14 +118,16 @@ definitions:
   user_api.UserCreateRequest:
     properties:
       nickName:
+        description: 昵称
         type: string
       password:
+        description: 密码
         type: string
       roleID:
-        description: 角色ID
+        description: 角色id
         type: integer
       userName:
-        description: bingding字段 定义字段在数据绑定（比如 HTTP 请求参数绑定）时的行为
+        description: 用户名
         type: string
     required:
     - password
@@ -316,6 +342,24 @@ paths:
       summary: 用户登录
       tags:
       - 用户管理
+  /api/site:
+    get:
+      description: 站点配置查询
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/config.Site'
+              type: object
+      summary: 站点配置查询
+      tags:
+      - 站点配置
   /api/users:
     delete:
       description: 删除用户

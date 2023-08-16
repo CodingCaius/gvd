@@ -14,7 +14,9 @@ import (
 // @host 101.43.78.114:8000
 // @BasePath /
 func main() {
+	//读取配置文件
 	global.Config = core.InitConfig()
+	//初始化连接
 	global.Log = core.InitLogger()
 	global.DB = core.InitMysql()
 	global.Redis = core.InitRedis(0)
