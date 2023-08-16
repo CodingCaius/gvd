@@ -66,7 +66,16 @@ func (UserApi) UserLoginView(c *gin.Context) {
 	c.Request.Header.Set("token", token)
 	log_stash.NewSuccessLogin(c)
 
+	log := log_stash.NewAction(c)
+	log.SetItem("用户登录", "成功")
+	log.SetItem("token", token)
+	log.SetItem("数组", []string{"1", "oahnf"})
+	log.SetItem("对象", user)
+	log.SetItem("对象", map[string]any{"name": user.UserName, "age": 18})
+
 	global.DB.Model(&user).Update("lastLogin", time.Now())
+
+	log.Info("用户登录成功")
 
 	res.OKWithData(token, c)
 }

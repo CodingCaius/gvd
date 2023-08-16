@@ -1,8 +1,10 @@
 package log_stash
 
 import (
+	"encoding/json"
 	"fmt"
 	"gvd_server/global"
+	"reflect"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -55,7 +57,15 @@ func (action *Action) Error(title string) {
 
 // SetItem 方法用于向 Action 结构体的 itemList 字段中添加附加项
 func (action *Action) SetItem(label string, value any) {
-	action.itemList = append(action.itemList, fmt.Sprintf("%s: %v", label, value))
+	//判断类型
+	_type := reflect.TypeOf(value).Kind()
+	switch _type {
+	case reflect.Struct, reflect.Map, reflect.Slice:
+		byteData, _ := json.Marshal(value)
+		action.itemList = append(action.itemList, fmt.Sprintf("%s: %s", label, string(byteData)))
+	default:
+		action.itemList = append(action.itemList, fmt.Sprintf("%s: %v", label, value))
+	}
 }
 
 func (action *Action) save() {
@@ -67,7 +77,7 @@ func (action *Action) save() {
 			Addr:     action.addr,
 			Level:    action.level,
 			Title:    action.title,
-			Content:  content,  //第一次的content
+			Content:  content, //第一次的content
 			UserID:   action.userID,
 			UserName: action.userName,
 			Type:     ActionType,
@@ -79,9 +89,9 @@ func (action *Action) save() {
 	}
 	//如果model不为空，说明是同一个log，就执行更新操作
 	global.DB.Model(action.model).Updates(LogModel{
-		Level:    action.level,
-		Title:    action.title,
+		Level: action.level,
+		Title: action.title,
 		//原来的content 加上 新的 content
-		Content:  action.model.Content + "\n" + content,
+		Content: action.model.Content + "\n" + content,
 	})
 }
