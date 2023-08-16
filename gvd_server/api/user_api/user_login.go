@@ -27,6 +27,10 @@ type UserLoginRequest struct {
 // @Success 200 {object} res.Response{}
 func (UserApi) UserLoginView(c *gin.Context) {
 	var ulr UserLoginRequest
+
+	log := log_stash.NewAction(c)
+	log.SetRequest(c)
+
 	err := c.ShouldBindJSON(&ulr)
 	if err != nil {
 		return
@@ -66,7 +70,7 @@ func (UserApi) UserLoginView(c *gin.Context) {
 	c.Request.Header.Set("token", token)
 	log_stash.NewSuccessLogin(c)
 
-	log := log_stash.NewAction(c)
+
 	log.SetItem("用户登录", "成功")
 	log.SetItem("token", token)
 	log.SetItem("数组", []string{"1", "oahnf"})

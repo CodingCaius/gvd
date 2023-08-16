@@ -1,9 +1,11 @@
 package log_stash
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"gvd_server/global"
+	"io"
 	"reflect"
 	"strings"
 
@@ -19,6 +21,7 @@ type Action struct {
 	title    string
 	itemList []string
 	model    *LogModel //创建之后赋值给它，用于后期更新
+	token    string
 }
 
 // 设置Action对象，并初始化一些字段
@@ -29,12 +32,16 @@ func NewAction(c *gin.Context) Action {
 		ip:   ip,
 		addr: addr,
 	}
-	token := c.Request.Header.Get("token")
+	/* token := c.Request.Header.Get("token")
 	jwyPayLoad := parseToken(token)
 	if jwyPayLoad != nil {
 		action.userID = jwyPayLoad.UserID
 		action.userName = jwyPayLoad.UserName
-	}
+	} */
+
+	//不在这里解析token，现在这里拿到token
+	token := c.Request.Header.Get("token")
+	action.SetToken(token)
 	return action
 }
 
@@ -68,8 +75,55 @@ func (action *Action) SetItem(label string, value any) {
 	}
 }
 
+
+func (action *Action) SetToken(token string) {
+	action.token = token
+}
+
+
+// SetRequest 设置一组入参
+func (action *Action) SetRequest(c *gin.Context) {
+	// 请求头
+	// 请求体
+	// 请求路径，请求方法
+	// 关于请求体的问题，拿了之后要还回去
+	// 请求体读完之后就没了，为了日志和Login参数绑定时都能用，因此要还回去
+	// 一定要在参数绑定之前调用
+	method := c.Request.Method
+	path := c.Request.URL.String()
+	//对请求体进行 读取和重置
+	byteData, _ := io.ReadAll(c.Request.Body)
+	c.Request.Body = io.NopCloser(bytes.NewBuffer(byteData))
+
+	action.itemList = append(action.itemList, fmt.Sprintf(
+		`<div class="log_request">
+  <div class="log_request_head">
+    <span class="log_request_method">%s</span>
+    <span class="log_request_path">%s</span>
+  </div>
+  <div class="log_request_body">
+    <pre class="log_json_body">%s</pre>
+  </div>
+</div>`, method, path, string(byteData)))
+}
+
+
+// SetResponse 设置一组出参
+func (action *Action) SetResponse(c *gin.Context) {
+  c.Set("action", action)
+}
+
+
 func (action *Action) save() {
 	content := strings.Join(action.itemList, "\n")
+
+	//留到这里解析token，顺便拿到用户id和用户名
+	jwyPayLoad := parseToken(action.token)
+	if jwyPayLoad != nil {
+		action.userID = jwyPayLoad.UserID
+		action.userName = jwyPayLoad.UserName
+	}
+
 	//这一步，model为空的话就创建一个并赋值，用于之后判断
 	if action.model == nil {
 		action.model = &LogModel{
