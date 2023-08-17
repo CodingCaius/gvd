@@ -360,6 +360,18 @@ paths:
       summary: 站点配置查询
       tags:
       - 站点配置
+    put:
+      description: 站点配置更新
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 站点配置更新
+      tags:
+      - 站点配置
   /api/users:
     delete:
       description: 删除用户

@@ -246,6 +246,24 @@ const docTemplate = `{
                         }
                     }
                 }
+            },
+            "put": {
+                "description": "站点配置更新",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "站点配置"
+                ],
+                "summary": "站点配置更新",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
             }
         },
         "/api/users": {
