@@ -35,7 +35,7 @@ func (RoleApi) RoleListView(c *gin.Context) {
     roleList = append(roleList, RoleListResponse{
       RoleModel: model,
       DocCount:  len(model.DocsList),
-      //UserCount:  len(model.UserList),
+      UserCount:  len(model.UserList),
     })
   }
   res.OKWithList(roleList, count, c)
