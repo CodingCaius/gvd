@@ -115,6 +115,19 @@ definitions:
       msg:
         type: string
     type: object
+  role_api.RoleCreateRequest:
+    properties:
+      id:
+        type: integer
+      pwd:
+        type: string
+      title:
+        maxLength: 16
+        minLength: 2
+        type: string
+    required:
+    - title
+    type: object
   user_api.UserCreateRequest:
     properties:
       nickName:
@@ -342,6 +355,31 @@ paths:
       summary: 用户登录
       tags:
       - 用户管理
+  /api/roles:
+    post:
+      description: 创建角色
+      parameters:
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/role_api.RoleCreateRequest'
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 创建角色
+      tags:
+      - 角色管理
   /api/site:
     get:
       description: 站点配置查询

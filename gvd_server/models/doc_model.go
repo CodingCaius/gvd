@@ -7,7 +7,7 @@ type DocModel struct {
 	DiggCount int    `gorm:"comment:点赞量" json:"diggcount"`
 	LookCount int    `gorm:"comment:浏览量" json:"lookCount"`
 	Key       string `gorm:"comment:key;not null;unique" json:"key"`
-	ParentID  *uint  `gorm:"comment:父文档id column:parentID" json:"parentID"`
+	ParentID  *uint  `gorm:"comment:父文档id column:parent_id" json:"parentID"`
 	//通过 ParentID 字段与父文档DocModel 关联起来的
 	ParentModel *DocModel   `gorm:"foreignKey:ParentID" json:"-"` //父文档
 	Child       []*DocModel `gorm:"foreignKey:ParentID" json:"-"` //子孙文档

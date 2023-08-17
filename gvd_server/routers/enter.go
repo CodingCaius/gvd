@@ -1,3 +1,9 @@
+//作为router文件夹的入口
+//在这里进行 路由分组 以及 路由添加
+
+//但 不同模块的路由添加由其他文件实现
+
+
 package routers
 
 import (
@@ -14,6 +20,7 @@ type RouterGroup struct {
 func Routers() *gin.Engine {
 	//创建了一个默认的 Gin 路由引擎
 	router := gin.Default()
+	
 	router.GET("/swagger/*any", gs.WrapHandler(swaggerFiles.Handler))
 
 	//创建api路由组
@@ -28,6 +35,7 @@ func Routers() *gin.Engine {
 	routerGroup.UserRouter()
 	routerGroup.ImageRouter()
 	routerGroup.SiteRouter()
+	routerGroup.RoleRouter()
 
 	return router
 }
