@@ -80,6 +80,11 @@ func (action *Action) SetToken(token string) {
 	action.token = token
 }
 
+func (action *Action) SetUrl(title, url string) {
+	// 如果要使用html显示，一定要注意xss问题
+	action.itemList = append(action.itemList, fmt.Sprintf("<a target=\"_blank\" href=\"%s\">%s</a>", url, title))
+}
+
 
 // SetRequest 设置一组入参
 func (action *Action) SetRequest(c *gin.Context) {
@@ -111,6 +116,14 @@ func (action *Action) SetRequest(c *gin.Context) {
 // SetResponse 设置一组出参
 func (action *Action) SetResponse(c *gin.Context) {
   c.Set("action", action)
+}
+
+func (action *Action) SetResponseContent(response string) {
+	action.itemList = append(action.itemList, fmt.Sprintf(`
+<div class="log_response">
+	<pre class="log_request_json">%s</pre>
+</div>
+`, response))
 }
 
 func (action *Action) SetFlush() {

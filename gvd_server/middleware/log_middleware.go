@@ -34,7 +34,8 @@ func LogMiddleWare() func(ctx *gin.Context) {
 		if !ok {
 			return
 		}
-		action.SetItem("响应", r.byteData.String())
+		
+		action.SetResponseContent(r.byteData.String())
 		action.SetFlush()
 	}
 }
