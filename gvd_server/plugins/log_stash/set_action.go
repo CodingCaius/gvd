@@ -89,7 +89,7 @@ func (action *Action) setItem(label string, value any, level Level) {
 		// 1. html字符  <span style="color:red" />
 		// 2. 控制字符 \033[31m xxx \033[0m
 		byteData, _ := json.Marshal(value)
-		action.itemList = append(action.itemList, fmt.Sprintf("<div class=\"log_item %\"><div class=\"log_item_label\">%s</div><div class=\"log_item_content\">%s</div></div>", level.String(), label, string(byteData)))
+		action.itemList = append(action.itemList, fmt.Sprintf("<div class=\"log_item %s\"><div class=\"log_item_label\">%s</div><div class=\"log_item_content\">%s</div></div>", level.String(), label, string(byteData)))
 	//case reflect.Array:
 	default:
 		action.itemList = append(action.itemList, fmt.Sprintf("<div class=\"log_item %s\"><div class=\"log_item_label\">%s</div><div class=\"log_item_content\">%v</div></div>", level.String(), label, value))
