@@ -113,6 +113,11 @@ func (action *Action) SetResponse(c *gin.Context) {
   c.Set("action", action)
 }
 
+func (action *Action) SetFlush() {
+	action.level = action.model.Level
+	action.save()
+}
+
 
 func (action *Action) save() {
 	content := strings.Join(action.itemList, "\n")

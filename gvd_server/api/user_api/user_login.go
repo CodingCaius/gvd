@@ -29,6 +29,7 @@ func (UserApi) UserLoginView(c *gin.Context) {
 	var ulr UserLoginRequest
 
 	log := log_stash.NewAction(c)
+	//设置请求日志
 	log.SetRequest(c)
 
 	err := c.ShouldBindJSON(&ulr)
@@ -82,4 +83,7 @@ func (UserApi) UserLoginView(c *gin.Context) {
 	log.Info("用户登录成功")
 
 	res.OKWithData(token, c)
+
+	//设置响应日志
+	log.SetResponse(c)
 }
