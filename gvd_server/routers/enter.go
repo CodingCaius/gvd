@@ -36,6 +36,7 @@ func Routers() *gin.Engine {
 	//定义具体的路由
 	routerGroup.UserRouter()
 	routerGroup.ImageRouter()
+	routerGroup.LogRouter()
 	routerGroup.SiteRouter()
 	routerGroup.RoleRouter()
 
