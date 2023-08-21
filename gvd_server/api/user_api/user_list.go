@@ -14,7 +14,6 @@ type UserListRequest struct {
 	Key   string `json:"key" form:"key"` //模糊匹配的关键字
 }
 
-
 // UserListView 用户列表
 // @Tags 用户管理
 // @Summary 用户列表

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gvd_server/global"
 	"gvd_server/models"
+	"gvd_server/plugins/log_stash"
 	"gvd_server/service/common/res"
 	"gvd_server/utils/hash"
 	"gvd_server/utils/jwts"
@@ -34,11 +35,22 @@ var ImageWhiteList = []string{
 // @Produce json
 // @Success 200 {object} res.Response{}
 func (ImageApi) ImageUploadView(c *gin.Context) {
+	log := log_stash.NewAction(c)
+
 	fileHeader, err := c.FormFile("image")
+	log.SetUpload(c)
+
+	defer log.SetFlush()
+
 	if err != nil {
 		res.FailWithMsg("图片参数错误", c)
 		return
 	}
+
+	log.SetRequestHeader(c)
+	log.SetRequest(c)
+
+
 	_claims, _ := c.Get("claims")
 	claims, _ := _claims.(*jwts.CustomClaims)
 
@@ -47,11 +59,13 @@ func (ImageApi) ImageUploadView(c *gin.Context) {
 	// 白名单判断
 	if !InImageWhiteList(fileHeader.Filename, ImageWhiteList) {
 		res.FailWithMsg("文件非法", c)
+		log.Warn("文件非法")
 		return
 	}
 	// 文件大小判断  2MB
 	if fileHeader.Size > int64(2*1024*1024) {
 		res.FailWithMsg("文件过大", c)
+		log.Warn("文件过大")
 		return
 	}
 	// 计算文件hash
@@ -81,6 +95,7 @@ func (ImageApi) ImageUploadView(c *gin.Context) {
 		if err != nil {
 			global.Log.Errorf("%s 文件保存错误 %s", savePath, err)
 			res.FailWithMsg("上传图片错误", c)
+			log.Error("图片保存失败")
 			return
 		}
 	} else {
@@ -103,8 +118,14 @@ func (ImageApi) ImageUploadView(c *gin.Context) {
 	if err != nil {
 		global.Log.Errorln(err)
 		res.FailWithMsg("文件上传失败", c)
+		log.Error("图片上传失败")
 		return
 	}
+
+	// 为日志添加 图片的web路径
+	log.SetImage(imageModel.WebPath())
+	log.Info("图片上传成功")
+
 	res.OK(imageModel.WebPath(), "图片上传成功", c)
 }
 

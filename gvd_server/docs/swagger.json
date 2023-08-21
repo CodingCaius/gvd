@@ -209,7 +209,197 @@
                 }
             }
         },
+        "/api/logs": {
+            "get": {
+                "description": "日志列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "日志管理"
+                ],
+                "summary": "日志列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "模糊匹配的关键字",
+                        "name": "key",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ],
+                        "type": "integer",
+                        "x-enum-varnames": [
+                            "Info",
+                            "Warning",
+                            "Error"
+                        ],
+                        "description": "日志查询的等级",
+                        "name": "level",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sort",
+                        "in": "query"
+                    },
+                    {
+                        "enum": [
+                            1,
+                            2,
+                            3
+                        ],
+                        "type": "integer",
+                        "x-enum-varnames": [
+                            "LoginType",
+                            "ActionType",
+                            "RuntimeType"
+                        ],
+                        "description": "日志的类型   1 登录日志  2 操作日志  3 运行日志",
+                        "name": "type",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/res.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/res.ListResponse-log_stash_LogModel"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/roles": {
+            "get": {
+                "description": "角色列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色管理"
+                ],
+                "summary": "角色列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "模糊匹配的关键字",
+                        "name": "key",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "name": "sort",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/res.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/res.ListResponse-role_api_RoleListResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "更新角色",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色管理"
+                ],
+                "summary": "更新角色",
+                "parameters": [
+                    {
+                        "description": "参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/role_api.RoleCreateRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            },
             "post": {
                 "description": "创建角色",
                 "produces": [
@@ -605,6 +795,97 @@
                 }
             }
         },
+        "log_stash.Level": {
+            "type": "integer",
+            "enum": [
+                1,
+                2,
+                3
+            ],
+            "x-enum-varnames": [
+                "Info",
+                "Warning",
+                "Error"
+            ]
+        },
+        "log_stash.LogModel": {
+            "type": "object",
+            "properties": {
+                "addr": {
+                    "description": "地址",
+                    "type": "string"
+                },
+                "content": {
+                    "description": "详情",
+                    "type": "string"
+                },
+                "createdAt": {
+                    "description": "添加时间",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "主键id",
+                    "type": "integer"
+                },
+                "ip": {
+                    "description": "ip",
+                    "type": "string"
+                },
+                "level": {
+                    "description": "等级",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/log_stash.Level"
+                        }
+                    ]
+                },
+                "serviceName": {
+                    "description": "服务名称",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "登录状态",
+                    "type": "boolean"
+                },
+                "title": {
+                    "description": "标题",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "日志的类型  1 登录 2 操作 3 运行",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/log_stash.LogType"
+                        }
+                    ]
+                },
+                "updatedAt": {
+                    "description": "更新时间",
+                    "type": "string"
+                },
+                "userID": {
+                    "description": "用户id",
+                    "type": "integer"
+                },
+                "userName": {
+                    "description": "用户名",
+                    "type": "string"
+                }
+            }
+        },
+        "log_stash.LogType": {
+            "type": "integer",
+            "enum": [
+                1,
+                2,
+                3
+            ],
+            "x-enum-varnames": [
+                "LoginType",
+                "ActionType",
+                "RuntimeType"
+            ]
+        },
         "models.UserModel": {
             "type": "object",
             "properties": {
@@ -674,6 +955,20 @@
                 }
             }
         },
+        "res.ListResponse-log_stash_LogModel": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/log_stash.LogModel"
+                    }
+                }
+            }
+        },
         "res.ListResponse-models_UserModel": {
             "type": "object",
             "properties": {
@@ -684,6 +979,20 @@
                     "type": "array",
                     "items": {
                         "$ref": "#/definitions/models.UserModel"
+                    }
+                }
+            }
+        },
+        "res.ListResponse-role_api_RoleListResponse": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/role_api.RoleListResponse"
                     }
                 }
             }
@@ -716,6 +1025,40 @@
                     "type": "string",
                     "maxLength": 16,
                     "minLength": 2
+                }
+            }
+        },
+        "role_api.RoleListResponse": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "docCount": {
+                    "description": "角色拥有的文档数",
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "isSystem": {
+                    "description": "是否是系统角色",
+                    "type": "boolean"
+                },
+                "pwd": {
+                    "description": "角色密码",
+                    "type": "string"
+                },
+                "title": {
+                    "description": "角色的名称",
+                    "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
+                },
+                "userCount": {
+                    "description": "角色下的用户数",
+                    "type": "integer"
                 }
             }
         },
