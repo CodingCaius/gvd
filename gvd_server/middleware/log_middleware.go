@@ -1,3 +1,8 @@
+
+//用于在 处理 HTTP 请求和响应过程中，记录请求和响应的内容，然后将这些内容传递给一个日志记录插件 log_stash
+
+
+
 package middleware
 
 import (
@@ -34,7 +39,7 @@ func LogMiddleWare() func(ctx *gin.Context) {
 		if !ok {
 			return
 		}
-		
+
 		action.SetResponseContent(r.byteData.String())
 		action.SetFlush()
 	}

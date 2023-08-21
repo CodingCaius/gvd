@@ -13,15 +13,17 @@ import (
 )
 
 type Action struct {
-	ip       string
-	addr     string
-	userName string
-	userID   uint
-	level    Level
-	title    string
-	itemList []string
-	model    *LogModel //创建之后赋值给它，用于后期更新
-	token    string
+	ip          string
+	addr        string
+	userName    string
+	userID      uint
+	serviceName string
+	level       Level
+	title       string
+	itemList    []string
+	model       *LogModel //创建之后赋值给它，用于后期更新
+	token       string
+	logType     LogType
 }
 
 // 设置Action对象，并初始化一些字段
@@ -31,6 +33,7 @@ func NewAction(c *gin.Context) Action {
 	action := Action{
 		ip:   ip,
 		addr: addr,
+		logType: ActionType,
 	}
 	/* token := c.Request.Header.Get("token")
 	jwyPayLoad := parseToken(token)
@@ -61,7 +64,6 @@ func (action *Action) Error(title string) {
 	action.title = title
 	action.save()
 }
-
 
 // 为每一个item设置具体的日志级别
 func (action *Action) SetItemInfo(label string, value any) {
@@ -96,9 +98,6 @@ func (action *Action) setItem(label string, value any, level Level) {
 	}
 }
 
-
-
-
 // // SetItem 方法用于向 Action 结构体的 itemList 字段中添加附加项
 // func (action *Action) SetItem(label string, value any) {
 // 	//判断类型
@@ -111,10 +110,6 @@ func (action *Action) setItem(label string, value any, level Level) {
 // 		action.itemList = append(action.itemList, fmt.Sprintf("%s: %v", label, value))
 // 	}
 // }
-
-
-
-
 
 func (action *Action) SetToken(token string) {
 	action.token = token
@@ -214,14 +209,18 @@ func (action *Action) SetFlush() {
 	action.save()
 }
 
+//用来保存日志记录到数据库中
 func (action *Action) save() {
 	content := strings.Join(action.itemList, "\n")
 
-	//留到这里解析token，顺便拿到用户id和用户名
-	jwyPayLoad := parseToken(action.token)
-	if jwyPayLoad != nil {
-		action.userID = jwyPayLoad.UserID
-		action.userName = jwyPayLoad.UserName
+	//有些接口是不需要token的，比如游客访问文档
+	if action.token != "" {
+		//留到这里解析token，顺便拿到用户id和用户名
+		jwyPayLoad := parseToken(action.token)
+		if jwyPayLoad != nil {
+			action.userID = jwyPayLoad.UserID
+			action.userName = jwyPayLoad.UserName
+		}
 	}
 
 	//这一步，model为空的话就创建一个并赋值，用于之后判断
@@ -234,7 +233,9 @@ func (action *Action) save() {
 			Content:  content, //第一次的content
 			UserID:   action.userID,
 			UserName: action.userName,
-			Type:     ActionType,
+			ServiceName: action.serviceName,
+			//这里不能写死
+			Type:     action.logType,
 		}
 		global.DB.Create(action.model)
 		// 如果不对content进行置空，那么content会重复
