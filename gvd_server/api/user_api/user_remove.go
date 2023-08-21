@@ -11,7 +11,7 @@ import (
 )
 
 
-// UserListView 删除用户
+// UserRemoveView 删除用户
 // @Tags 用户管理
 // @Summary 删除用户
 // @Description 删除用户

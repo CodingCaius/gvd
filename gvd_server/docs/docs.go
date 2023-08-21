@@ -57,6 +57,44 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/docs": {
+            "post": {
+                "description": "创建文档，创建成功之后，data=文档id",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "文档管理"
+                ],
+                "summary": "创建文档",
+                "parameters": [
+                    {
+                        "description": "参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/doc_api.DocCreateRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/image": {
             "post": {
                 "description": "上传图片",
@@ -229,6 +267,24 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
+                        "description": "感觉地址查询",
+                        "name": "addr",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "查某一天，格式是年-月-日",
+                        "name": "date",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "根据ip查询",
+                        "name": "ip",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
                         "description": "模糊匹配的关键字",
                         "name": "key",
                         "in": "query"
@@ -281,6 +337,12 @@ const docTemplate = `{
                         "in": "query"
                     },
                     {
+                        "type": "integer",
+                        "description": "根据用户id查询",
+                        "name": "userID",
+                        "in": "query"
+                    },
+                    {
                         "type": "string",
                         "description": "token",
                         "name": "token",
@@ -305,6 +367,76 @@ const docTemplate = `{
                                     }
                                 }
                             ]
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "删除日志",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "日志管理"
+                ],
+                "summary": "删除日志",
+                "parameters": [
+                    {
+                        "description": "参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/log_api.LogRemoveRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/logs/read": {
+            "get": {
+                "description": "日志列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "日志管理"
+                ],
+                "summary": "日志列表",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "name": "id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
                         }
                     }
                 }
@@ -424,6 +556,42 @@ const docTemplate = `{
                         "required": true,
                         "schema": {
                             "$ref": "#/definitions/role_api.RoleCreateRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "删除角色",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色管理"
+                ],
+                "summary": "删除角色",
+                "parameters": [
+                    {
+                        "description": "参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.IDRequest"
                         }
                     },
                     {
@@ -766,6 +934,24 @@ const docTemplate = `{
                 }
             }
         },
+        "doc_api.DocCreateRequest": {
+            "type": "object",
+            "required": [
+                "content",
+                "title"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "parentID": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
         "image_api.ImageListResponse": {
             "type": "object",
             "properties": {
@@ -799,6 +985,34 @@ const docTemplate = `{
                 },
                 "webPath": {
                     "type": "string"
+                }
+            }
+        },
+        "log_api.LogRemoveRequest": {
+            "type": "object",
+            "properties": {
+                "endTime": {
+                    "description": "年月日格式的结束时间",
+                    "type": "string"
+                },
+                "idList": {
+                    "description": "可以传id列表删除",
+                    "type": "array",
+                    "items": {
+                        "type": "integer"
+                    }
+                },
+                "ip": {
+                    "description": "根据用户ip删除",
+                    "type": "string"
+                },
+                "startTime": {
+                    "description": "年月日格式的开始时间",
+                    "type": "string"
+                },
+                "userID": {
+                    "description": "根据用户删除日志",
+                    "type": "integer"
                 }
             }
         },
@@ -846,6 +1060,10 @@ const docTemplate = `{
                         }
                     ]
                 },
+                "readStatus": {
+                    "description": "阅读状态   true   已读  false  未读  默认是未读状态",
+                    "type": "boolean"
+                },
                 "serviceName": {
                     "description": "服务名称",
                     "type": "string"
@@ -892,6 +1110,14 @@ const docTemplate = `{
                 "ActionType",
                 "RuntimeType"
             ]
+        },
+        "models.IDRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                }
+            }
         },
         "models.UserModel": {
             "type": "object",

@@ -14,7 +14,7 @@ type UserUpdatePasswordRequest struct {
 	Password string `json:"password" binding:"required" label:"新密码"`
 }
 
-// UserListView 用户修改密码
+// UserUpdatePasswordView 用户修改密码
 // @Tags 用户管理
 // @Summary 用户修改密码
 // @Description 用户修改密码

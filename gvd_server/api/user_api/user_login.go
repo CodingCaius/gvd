@@ -17,7 +17,7 @@ type UserLoginRequest struct {
 	Password string `json:"password" binding:"required" label:"密码"`
 }
 
-// UserListView 用户登录
+// UserLoginView 用户登录
 // @Tags 用户管理
 // @Summary 用户登录
 // @Description 用户登录

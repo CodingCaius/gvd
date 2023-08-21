@@ -7,5 +7,5 @@ type RoleModel struct {
 	IsSystem bool `gorm:"column:isSystem" json:"isSystem"` //是否是系统角色
 	//角色拥有的文档
 	DocsList []DocModel `gorm:"many2many:role_doc_models;joinForeignKey:RoleID;JoinReferences:DocID" json:"-"` // joinForeignKey:RoleID 自定义外键
-	UserList []UserModel `foreignKey:"RoleID" json:"-"`
+	UserList []UserModel `gorm:"foreignKey:RoleID" json:"-"`
 }

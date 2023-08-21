@@ -18,7 +18,7 @@ type UserUpdateRequest struct {
 
 }
 
-// UserListView 管理员更新用户信息
+// UserUpdateView 管理员更新用户信息
 // @Tags 用户管理
 // @Summary 管理员更新用户信息
 // @Description 管理员更新用户信息
