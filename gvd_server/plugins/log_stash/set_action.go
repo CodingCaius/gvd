@@ -31,8 +31,8 @@ func NewAction(c *gin.Context) Action {
 	ip := c.RemoteIP()
 	addr := "局域网"
 	action := Action{
-		ip:   ip,
-		addr: addr,
+		ip:      ip,
+		addr:    addr,
 		logType: ActionType,
 	}
 	/* token := c.Request.Header.Get("token")
@@ -137,7 +137,7 @@ func (action *Action) SetUpload(c *gin.Context) {
 	}
 	// 遍历表单参数中的文件
 	for s, headers := range forms.File {
-		// 拼接错误信息
+		// 拼接信息
 		action.itemList = append(action.itemList, fmt.Sprintf(
 			`<div class="log_upload">
         <div class="log_upload_head">
@@ -202,6 +202,10 @@ func (action *Action) SetResponseContent(response string) {
 	<pre class="log_request_json">%s</pre>
 </div>
 `, response))
+
+	//<div class="log_response">
+	//<pre class="log_request_json">{"code":0,"data":"/uploads/caius/4b2185c792a7c409b0bf6f860fdd0bef.jpg","msg":"图片上传成功"}</pre>
+	//</div>
 }
 
 func (action *Action) SetFlush() {
@@ -209,7 +213,7 @@ func (action *Action) SetFlush() {
 	action.save()
 }
 
-//用来保存日志记录到数据库中
+// 用来保存日志记录到数据库中
 func (action *Action) save() {
 	content := strings.Join(action.itemList, "\n")
 
@@ -226,16 +230,16 @@ func (action *Action) save() {
 	//这一步，model为空的话就创建一个并赋值，用于之后判断
 	if action.model == nil {
 		action.model = &LogModel{
-			IP:       action.ip,
-			Addr:     action.addr,
-			Level:    action.level,
-			Title:    action.title,
-			Content:  content, //第一次的content
-			UserID:   action.userID,
-			UserName: action.userName,
+			IP:          action.ip,
+			Addr:        action.addr,
+			Level:       action.level,
+			Title:       action.title,
+			Content:     content, //第一次的content
+			UserID:      action.userID,
+			UserName:    action.userName,
 			ServiceName: action.serviceName,
 			//这里不能写死
-			Type:     action.logType,
+			Type: action.logType,
 		}
 		global.DB.Create(action.model)
 		// 如果不对content进行置空，那么content会重复

@@ -49,6 +49,8 @@ func (ImageApi) ImageUploadView(c *gin.Context) {
 
 	log.SetRequestHeader(c)
 	log.SetRequest(c)
+	//这里获取 action对象，在响应中间件中用该对象 向响应中添加内容
+	log.SetResponse(c)
 
 
 	_claims, _ := c.Get("claims")

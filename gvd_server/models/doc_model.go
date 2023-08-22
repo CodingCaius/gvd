@@ -1,5 +1,7 @@
 package models
 
+import "gvd_server/global"
+
 type DocModel struct {
 	Model
 	Title     string `gorm:"comment:文档标题" json:"title"`
@@ -18,4 +20,16 @@ type DocModel struct {
 	DocID: 外键，关联到文档表的 DocID 字段。
 	UserID: 外键，关联到用户表的 UserID 字段。*/
 	UserCollDocList []UserModel `gorm:"many2many:user_coll_doc_models;joinForeignKey:DocID;JoinReferences:UserID" json:"-"`
+}
+
+// FindAllParentDocList 找一个文档的所有父文档
+func FindAllParentDocList(doc DocModel, docList *[]DocModel) {
+	// 不管谁来，先把自己放进去
+	*docList = append(*docList, doc)
+	if doc.ParentID != nil {
+		// 说明有父文档
+		var parentDoc DocModel
+		global.DB.Take(&parentDoc, *doc.ParentID)
+		FindAllParentDocList(parentDoc, docList)
+	}
 }

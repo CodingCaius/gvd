@@ -60,7 +60,7 @@ func (DocApi) DocCreateView(c *gin.Context) {
 	}
 	err = global.DB.Create(&docModel).Error
 	if err != nil {
-		//log.SetItemErr("文档保存失败", err.Error())
+		log.SetItemErr("文档保存失败", err.Error())
 		res.FailWithMsg("文档保存失败", c)
 		return
 	}
@@ -68,26 +68,15 @@ func (DocApi) DocCreateView(c *gin.Context) {
 	// key的作用
 	// 怎么算这个key
 	var docList []models.DocModel
-
-
-
-
-
-
-
-
-
-
-
-
-
-	//models.FindAllParentDocList(docModel, &docList)
+	models.FindAllParentDocList(docModel, &docList)
 	// 列表一定是有值的
+	// 接下来通过循环来拿 ID
 	var docIDList []string
 	docLen := len(docList)
 	for i := docLen - 1; i >= 0; i-- {
 		docIDList = append(docIDList, fmt.Sprintf("%d", docList[i].ID))
 	}
+	// 将 ID 拼接起来
 	key := strings.Join(docIDList, ".")
 	global.DB.Model(&docModel).Update("key", key)
 

@@ -39,6 +39,7 @@ func Routers() *gin.Engine {
 	routerGroup.LogRouter()
 	routerGroup.SiteRouter()
 	routerGroup.RoleRouter()
+	routerGroup.DocRouter()
 
 	return router
 }
