@@ -16,8 +16,5 @@ func Logout(token string, expiration time.Duration) error {
 // CheckLogout 判断一个token是否是属于注销的token
 func CheckLogout(token string) bool {
   _, err := global.Redis.Get(prefix + token).Result()
-  if err != nil {
-    return false
-  }
-  return true
+  return err == nil
 }
