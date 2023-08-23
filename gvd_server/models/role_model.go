@@ -1,5 +1,8 @@
 package models
 
+// 角色表 和 文档表 分别建立了两个连接表
+// 分别是 role_doc_models 和 user_coll_doc_models
+
 type RoleModel struct {
 	Model
 	Title string `gorm:"size:16;not null;comment:角色的名称" json:"title"` //角色的名称

@@ -24,6 +24,29 @@ definitions:
         description: 网站名称
         type: string
     type: object
+  doc_api.DocContentResponse:
+    properties:
+      collCount:
+        description: 收藏量
+        type: integer
+      content:
+        type: string
+      diggCount:
+        description: 点赞量
+        type: integer
+      isColl:
+        description: 用户是否收藏
+        type: boolean
+      isPwd:
+        description: 是否需要密码
+        type: boolean
+      isSee:
+        description: 是否试看
+        type: boolean
+      lookCount:
+        description: 浏览量
+        type: integer
+    type: object
   doc_api.DocCreateRequest:
     properties:
       content:
@@ -35,6 +58,26 @@ definitions:
     required:
     - content
     - title
+    type: object
+  doc_api.DocInfoResponse:
+    properties:
+      contentLength:
+        description: 正文内容
+        type: integer
+      createdAt:
+        type: string
+      diggCount:
+        type: integer
+      id:
+        type: integer
+      key:
+        type: string
+      lookCount:
+        type: integer
+      title:
+        type: string
+      updatedAt:
+        type: string
     type: object
   image_api.ImageListResponse:
     properties:
@@ -423,6 +466,59 @@ paths:
           schema:
             $ref: '#/definitions/res.Response'
       summary: 创建文档
+      tags:
+      - 文档管理
+  /api/docs/{id}:
+    get:
+      description: 文档内容
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/doc_api.DocContentResponse'
+              type: object
+      summary: 文档内容
+      tags:
+      - 文档管理
+  /api/docs/info/{id}:
+    get:
+      description: 文档基础信息
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/doc_api.DocInfoResponse'
+              type: object
+      summary: 文档基础信息
       tags:
       - 文档管理
   /api/image:

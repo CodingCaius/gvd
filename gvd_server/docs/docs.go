@@ -95,6 +95,95 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/docs/info/{id}": {
+            "get": {
+                "description": "文档基础信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "文档管理"
+                ],
+                "summary": "文档基础信息",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/res.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/doc_api.DocInfoResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/docs/{id}": {
+            "get": {
+                "description": "文档内容",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "文档管理"
+                ],
+                "summary": "文档内容",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/res.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/doc_api.DocContentResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/image": {
             "post": {
                 "description": "上传图片",
@@ -934,6 +1023,38 @@ const docTemplate = `{
                 }
             }
         },
+        "doc_api.DocContentResponse": {
+            "type": "object",
+            "properties": {
+                "collCount": {
+                    "description": "收藏量",
+                    "type": "integer"
+                },
+                "content": {
+                    "type": "string"
+                },
+                "diggCount": {
+                    "description": "点赞量",
+                    "type": "integer"
+                },
+                "isColl": {
+                    "description": "用户是否收藏",
+                    "type": "boolean"
+                },
+                "isPwd": {
+                    "description": "是否需要密码",
+                    "type": "boolean"
+                },
+                "isSee": {
+                    "description": "是否试看",
+                    "type": "boolean"
+                },
+                "lookCount": {
+                    "description": "浏览量",
+                    "type": "integer"
+                }
+            }
+        },
         "doc_api.DocCreateRequest": {
             "type": "object",
             "required": [
@@ -948,6 +1069,36 @@ const docTemplate = `{
                     "type": "integer"
                 },
                 "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "doc_api.DocInfoResponse": {
+            "type": "object",
+            "properties": {
+                "contentLength": {
+                    "description": "正文内容",
+                    "type": "integer"
+                },
+                "createdAt": {
+                    "type": "string"
+                },
+                "diggCount": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "key": {
+                    "type": "string"
+                },
+                "lookCount": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updatedAt": {
                     "type": "string"
                 }
             }

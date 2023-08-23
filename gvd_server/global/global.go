@@ -14,3 +14,6 @@ var (
 	DB     *gorm.DB
 	Redis  *redis.Client
 )
+
+// DocSplitSign 文本特殊分隔符
+const DocSplitSign = "---===---"

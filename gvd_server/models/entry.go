@@ -1,5 +1,8 @@
 package models //表结构
 
+// 该项目的四大核心表
+// 角色表 角色文档表 用户表 文档表
+
 import "time"
 
 /*
