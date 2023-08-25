@@ -143,6 +143,49 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/docs/pwd": {
+            "post": {
+                "description": "输入密码，访问文档",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "文档管理"
+                ],
+                "summary": "输入密码，访问文档",
+                "parameters": [
+                    {
+                        "description": "参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/doc_api.DocPwdRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/res.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/doc_api.DocContentResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/docs/{id}": {
             "get": {
                 "description": "文档内容",
@@ -1099,6 +1142,19 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "doc_api.DocPwdRequest": {
+            "type": "object",
+            "properties": {
+                "docID": {
+                    "description": "文档id",
+                    "type": "integer"
+                },
+                "pwd": {
+                    "description": "密码",
                     "type": "string"
                 }
             }

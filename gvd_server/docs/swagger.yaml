@@ -79,6 +79,15 @@ definitions:
       updatedAt:
         type: string
     type: object
+  doc_api.DocPwdRequest:
+    properties:
+      docID:
+        description: 文档id
+        type: integer
+      pwd:
+        description: 密码
+        type: string
+    type: object
   image_api.ImageListResponse:
     properties:
       createdAt:
@@ -519,6 +528,31 @@ paths:
                   $ref: '#/definitions/doc_api.DocInfoResponse'
               type: object
       summary: 文档基础信息
+      tags:
+      - 文档管理
+  /api/docs/pwd:
+    post:
+      description: 输入密码，访问文档
+      parameters:
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/doc_api.DocPwdRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/doc_api.DocContentResponse'
+              type: object
+      summary: 输入密码，访问文档
       tags:
       - 文档管理
   /api/image:
