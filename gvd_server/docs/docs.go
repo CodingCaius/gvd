@@ -95,6 +95,35 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/docs/edit/{id}": {
+            "get": {
+                "description": "获取完整的正文",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "文档管理"
+                ],
+                "summary": "获取完整的正文",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/docs/info/{id}": {
             "get": {
                 "description": "文档基础信息",
@@ -222,6 +251,49 @@ const docTemplate = `{
                                     }
                                 }
                             ]
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "更新文档，更新文档的标题和正文",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "文档管理"
+                ],
+                "summary": "更新文档",
+                "parameters": [
+                    {
+                        "description": "参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/doc_api.DocUpdateRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
                         }
                     }
                 }
@@ -1155,6 +1227,17 @@ const docTemplate = `{
                 },
                 "pwd": {
                     "description": "密码",
+                    "type": "string"
+                }
+            }
+        },
+        "doc_api.DocUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "title": {
                     "type": "string"
                 }
             }

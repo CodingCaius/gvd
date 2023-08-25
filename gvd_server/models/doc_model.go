@@ -4,7 +4,7 @@ import "gvd_server/global"
 
 type DocModel struct {
 	Model
-	Title     string `gorm:"comment:文档标题" json:"title"`
+	Title     string `gorm:"comment:文档标题;size:32" json:"title"`
 	Content   string `gorm:"comment:文档内容" json:"-"`
 	DiggCount int    `gorm:"comment:点赞量" json:"diggcount"`
 	LookCount int    `gorm:"comment:浏览量" json:"lookCount"`

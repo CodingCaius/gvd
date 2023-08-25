@@ -88,6 +88,13 @@ definitions:
         description: 密码
         type: string
     type: object
+  doc_api.DocUpdateRequest:
+    properties:
+      content:
+        type: string
+      title:
+        type: string
+    type: object
   image_api.ImageListResponse:
     properties:
       createdAt:
@@ -499,6 +506,54 @@ paths:
                   $ref: '#/definitions/doc_api.DocContentResponse'
               type: object
       summary: 文档内容
+      tags:
+      - 文档管理
+    put:
+      description: 更新文档，更新文档的标题和正文
+      parameters:
+      - description: 参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/doc_api.DocUpdateRequest'
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 更新文档
+      tags:
+      - 文档管理
+  /api/docs/edit/{id}:
+    get:
+      description: 获取完整的正文
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 获取完整的正文
       tags:
       - 文档管理
   /api/docs/info/{id}:
