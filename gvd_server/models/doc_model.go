@@ -33,3 +33,14 @@ func FindAllParentDocList(doc DocModel, docList *[]DocModel) {
 		FindAllParentDocList(parentDoc, docList)
 	}
 }
+
+
+// FindAllSubDocList 找一个文档的所有子文档
+func FindAllSubDocList(doc DocModel) (docList []DocModel) {
+	global.DB.Preload("Child").Take(&doc)
+	for _, model := range doc.Child {
+		docList = append(docList, *model)
+		docList = append(docList, FindAllSubDocList(*model)...)
+	}
+	return
+}

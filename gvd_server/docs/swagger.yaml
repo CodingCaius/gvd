@@ -485,6 +485,24 @@ paths:
       tags:
       - 文档管理
   /api/docs/{id}:
+    delete:
+      description: 删除文档
+      parameters:
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/res.Response'
+      summary: 删除文档
+      tags:
+      - 文档管理
     get:
       description: 文档内容
       parameters:
