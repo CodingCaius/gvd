@@ -95,6 +95,35 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/docs/digg/{id}": {
+            "get": {
+                "description": "文档点赞",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "文档管理"
+                ],
+                "summary": "文档点赞",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/res.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/docs/edit/{id}": {
             "get": {
                 "description": "获取完整的正文",

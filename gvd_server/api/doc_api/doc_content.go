@@ -56,6 +56,9 @@ func (DocApi) DocContentView(c *gin.Context) {
 		return
 	}
 
+	// 设置浏览量
+	redis_service.NewDocLook().SetById(cr.ID)
+
 	// 在角色文档表中拿到 文档
 	doc := roleDoc.DocModel
 

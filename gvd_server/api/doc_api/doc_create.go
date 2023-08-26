@@ -76,9 +76,17 @@ func (DocApi) DocCreateView(c *gin.Context) {
 	for i := docLen - 1; i >= 0; i-- {
 		docIDList = append(docIDList, fmt.Sprintf("%d", docList[i].ID))
 	}
+
 	// 将 ID 拼接起来
 	key := strings.Join(docIDList, ".")
 	global.DB.Model(&docModel).Update("key", key)
+
+	// 自动加上管理员权限
+	global.DB.Create(&models.RoleDocModel{
+		RoleID: 1,
+		DocID:  docModel.ID,
+	})
+
 
 	res.OK(docModel.ID, "文档添加成功", c)
 
