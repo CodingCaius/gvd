@@ -44,3 +44,28 @@ func FindAllSubDocList(doc DocModel) (docList []DocModel) {
 	}
 	return
 }
+
+// DocTree 返回文档树 根据父亲id来查找子id，刚开始传入 nil
+func DocTree(parentID *uint) (docList []*DocModel) {
+    var query = global.DB.Where("") // 创建一个查询对象
+
+    if parentID == nil {
+        // 如果 parentID 为 nil，表示要找根文档，因此设置查询条件为 parent_id is null
+        query.Where("parent_id is null")
+    } else {
+        // 如果 parentID 不为 nil，表示要找具有指定 parentID 的子文档
+        query.Where("parent_id = ?", *parentID)
+    }
+
+    // 在数据库中执行查询，并将结果加载到 docList 切片中
+    global.DB.Preload("Child").Where(query).Find(&docList)
+
+    // 遍历查询到的每个文档模型
+    for _, model := range docList {
+        // 递归调用 DocTree 函数，以获取当前文档的子文档，并将子文档列表赋值给当前文档的 Child 字段
+        subDocs := DocTree(&model.ID)
+        model.Child = subDocs
+    }
+
+    return // 返回构建好的文档树
+}
