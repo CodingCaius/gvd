@@ -9,6 +9,7 @@ import (
 )
 
 type RoleDocRequest struct {
+	// 绑定query时，对应标签是 form， 绑定form表单数据也是用 form标签
 	RoleID uint `json:"roleID" form:"roleID" binding:"required" label:"角色id"`
 	DocID  uint `json:"docID" form:"docID" binding:"required" label:"文档id"`
 }
