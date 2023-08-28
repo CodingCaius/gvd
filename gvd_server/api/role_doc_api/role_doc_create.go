@@ -1,10 +1,11 @@
 package role_doc_api
 
 import (
-	"github.com/gin-gonic/gin"
 	"gvd_server/global"
 	"gvd_server/models"
 	"gvd_server/service/common/res"
+
+	"github.com/gin-gonic/gin"
 )
 
 type RoleDocRequest struct {
