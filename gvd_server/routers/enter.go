@@ -40,6 +40,7 @@ func Routers() *gin.Engine {
 	routerGroup.SiteRouter()
 	routerGroup.RoleRouter()
 	routerGroup.DocRouter()
+	routerGroup.RoleDocRouter() // 角色文档路由
 
 	return router
 }

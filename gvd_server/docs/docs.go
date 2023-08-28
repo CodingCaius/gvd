@@ -702,6 +702,54 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/role_docs/{id}": {
+            "get": {
+                "description": "文档树列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色文档管理"
+                ],
+                "summary": "文档树列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/res.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/role_doc_api.RoleDocListResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/roles": {
             "get": {
                 "description": "角色列表",
@@ -1625,7 +1673,7 @@ const docTemplate = `{
                     "type": "boolean"
                 },
                 "pwd": {
-                    "description": "角色密码",
+                    "description": "统一设置这个角色所拥有的需要密码访问的文档的密码",
                     "type": "string"
                 },
                 "title": {
@@ -1638,6 +1686,46 @@ const docTemplate = `{
                 "userCount": {
                     "description": "角色下的用户数",
                     "type": "integer"
+                }
+            }
+        },
+        "role_doc_api.DocTree": {
+            "type": "object",
+            "properties": {
+                "children": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/role_doc_api.DocTree"
+                    }
+                },
+                "isPwd": {
+                    "description": "是否需要密码",
+                    "type": "boolean"
+                },
+                "isSee": {
+                    "description": "是否试看",
+                    "type": "boolean"
+                },
+                "key": {
+                    "type": "integer"
+                },
+                "show": {
+                    "description": "角色是否可以看到文档",
+                    "type": "boolean"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "role_doc_api.RoleDocListResponse": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/role_doc_api.DocTree"
+                    }
                 }
             }
         },

@@ -6,6 +6,7 @@ package models
 type RoleModel struct {
 	Model
 	Title string `gorm:"size:16;not null;comment:角色的名称" json:"title"` //角色的名称
+	// 统一设置这个角色所拥有的需要密码访问的文档的密码
 	Pwd string `gorm:"size:64" json:"pwd"` //角色密码
 	IsSystem bool `gorm:"column:isSystem" json:"isSystem"` //是否是系统角色
 	//角色拥有的文档

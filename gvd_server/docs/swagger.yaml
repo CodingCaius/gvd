@@ -322,7 +322,7 @@ definitions:
         description: 是否是系统角色
         type: boolean
       pwd:
-        description: 角色密码
+        description: 统一设置这个角色所拥有的需要密码访问的文档的密码
         type: string
       title:
         description: 角色的名称
@@ -332,6 +332,33 @@ definitions:
       userCount:
         description: 角色下的用户数
         type: integer
+    type: object
+  role_doc_api.DocTree:
+    properties:
+      children:
+        items:
+          $ref: '#/definitions/role_doc_api.DocTree'
+        type: array
+      isPwd:
+        description: 是否需要密码
+        type: boolean
+      isSee:
+        description: 是否试看
+        type: boolean
+      key:
+        type: integer
+      show:
+        description: 角色是否可以看到文档
+        type: boolean
+      title:
+        type: string
+    type: object
+  role_doc_api.RoleDocListResponse:
+    properties:
+      list:
+        items:
+          $ref: '#/definitions/role_doc_api.DocTree'
+        type: array
     type: object
   user_api.UserCreateRequest:
     properties:
@@ -871,6 +898,35 @@ paths:
       summary: 日志列表
       tags:
       - 日志管理
+  /api/role_docs/{id}:
+    get:
+      description: 文档树列表
+      parameters:
+      - description: token
+        in: header
+        name: token
+        required: true
+        type: string
+      - description: id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/res.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/role_doc_api.RoleDocListResponse'
+              type: object
+      summary: 文档树列表
+      tags:
+      - 角色文档管理
   /api/roles:
     delete:
       description: 删除角色
