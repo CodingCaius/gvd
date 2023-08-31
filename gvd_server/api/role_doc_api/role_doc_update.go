@@ -76,6 +76,7 @@ func (RoleDocApi) RoleDocUpdateView(c *gin.Context) {
 			return
 		}
 	}
+
 	// 更新一些参数
 	// 先查一下全部
 	var roleDocList []models.RoleDocModel
