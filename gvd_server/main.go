@@ -11,7 +11,7 @@ import (
 // @title 文档项目api文档
 // @version 1.0
 // @description API文档
-// @host 101.43.78.114:8000
+// @host 127.0.0.1:8000
 // @BasePath /
 func main() {
 	//读取配置文件
